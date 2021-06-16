@@ -1,0 +1,110 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: platform-test
+  region: us-east-2
+  version: "1.16"
+
+vpc:
+  id: vpc-XXXXXXXXXXXXXXXXX
+  subnets:
+    private:
+      us-east-2a: {id: subnet-XXXXXXXXXXXXXXXXX}
+      us-east-2b: {id: subnet-XXXXXXXXXXXXXXXXX}
+    public:
+      us-east-2a: {id: subnet-XXXXXXXXXXXXXXXXX}
+      us-east-2b: {id: subnet-XXXXXXXXXXXXXXXXX}
+
+nodeGroups:
+  - name: platform-test-workers-1-16
+    instanceType: m5.4xlarge
+    minSize: 1
+    maxSize: 10
+    volumeSize: 100
+    privateNetworking: true
+    iam:
+      instanceProfileARN: "arn:aws:iam::{ACCOUNT_ID}:instance-profile/EKSWorkerNode"
+      instanceRoleARN: "arn:aws:iam::{ACCOUNT_ID}:role/EKS-Worker-Role"
+    securityGroups:
+      withShared: true
+      withLocal: true
+      attachIDs: ['sg-XXXXXXXXXXXXXXXXX']
+    tags:
+      evtech:owner: kpraveersingh@gmail.com
+      k8s.io/cluster-autoscaler/enabled: "true"
+      k8s.io/cluster-autoscaler/platform-test: "owned"
+  - name: platform-test-workers-b-1-16
+    instanceType: m5.8xlarge
+    minSize: 1
+    maxSize: 10
+    volumeSize: 100
+    privateNetworking: true
+    iam:
+      instanceProfileARN: "arn:aws:iam::{ACCOUNT_ID}:instance-profile/EKSWorkerNode"
+      instanceRoleARN: "arn:aws:iam::{ACCOUNT_ID}:role/EKS-Worker-Role"
+    securityGroups:
+      withShared: true
+      withLocal: true
+      attachIDs: ['sg-XXXXXXXXXXXXXXXXX']
+    tags:
+      evtech:environment: test
+      k8s.io/cluster-autoscaler/enabled: "true"
+      k8s.io/cluster-autoscaler/platform-test: "owned"
+  - name: platform-test-highgpu-workers-1-16
+    labels:
+      nvidia.com/gpu: 'true'
+      k8s.amazonaws.com/accelerator: nvidia-tesla
+    #instanceType: g4dn.8xlarge
+    minSize: 1
+    maxSize: 10
+    volumeSize: 100
+    privateNetworking: true
+    availabilityZones: ["us-east-2b"]
+    taints:
+      nvidia.com/gpu: "true:NoSchedule"
+    iam:
+      instanceProfileARN: "arn:aws:iam::{ACCOUNT_ID}:instance-profile/EKSWorkerNode"
+      instanceRoleARN: "arn:aws:iam::{ACCOUNT_ID}:role/EKS-Worker-Role"
+    instancesDistribution:
+      instanceTypes: ["g4dn.4xlarge", "g4dn.xlarge", "p2.xlarge", "g4dn.8xlarge", "g4dn.12xlarge"] # At least two instance types should be specified
+      onDemandPercentageAboveBaseCapacity: 0
+      spotInstancePools: 10
+    securityGroups:
+      withShared: true
+      withLocal: true
+      attachIDs: ['sg-XXXXXXXXXXXXXXXXX']
+    tags:
+      evtech:owner: kpraveersingh@gmail.com
+      k8s.io/cluster-autoscaler/enabled: "true"
+      k8s.io/cluster-autoscaler/platform-test: "owned"
+      k8s.io/cluster-autoscaler/node-template/label/nvidia.com/gpu: "true"
+      k8s.io/cluster-autoscaler/node-template/taint/dedicated: nvidia.com/gpu=true
+  - name: platform-test-highcpu-workers-1-16
+    labels:
+      role: platform-test-highcpu-worker
+      workload-type: highcpu
+    #instanceType: c5.18xlarge
+    minSize: 2
+    maxSize: 10
+    volumeSize: 100
+    privateNetworking: true
+    availabilityZones: ["us-east-2a"]
+    taints:
+      highcpu-falcon: "true:NoSchedule"
+    iam:
+      instanceProfileARN: "arn:aws:iam::{ACCOUNT_ID}:instance-profile/EKSWorkerNode"
+      instanceRoleARN: "arn:aws:iam::{ACCOUNT_ID}:role/EKS-Worker-Role"
+    instancesDistribution:
+      onDemandPercentageAboveBaseCapacity: 0
+      instanceTypes: ["c5.12xlarge", "c5.18xlarge", "c5.24xlarge"] # At least two instance types should be specified
+      spotInstancePools: 10
+    securityGroups:
+      withShared: true
+      withLocal: true
+      attachIDs: ['sg-XXXXXXXXXXXXXXXXX']
+    tags:
+      evtech:owner: kpraveersingh@gmail.com
+      k8s.io/cluster-autoscaler/enabled: "true"
+      k8s.io/cluster-autoscaler/platform-test: "owned"
+      k8s.io/cluster-autoscaler/node-template/taint/highcpu-falcon: "true:NoSchedule"
