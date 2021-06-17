@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: istio-external-ingressgateway
+  namespace: istio-system
+  annotations:
+    alb.ingress.kubernetes.io/tags: "evtech:owner=platform-infrastructure,evtech:env=sandbox,Description=Istio-External-Ingress-LB"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+    service.beta.kubernetes.io/aws-load-balancer-type: "elb"
+  labels:
+    app: istio-exteranl-ingressgateway
+    release: istio
+    istio: external-ingressgateway
+spec:
+  type: LoadBalancer
+  selector:
+    app: istio-ingressgateway
+  ports:
+    -
+      name: http2
+      port: 80
+      targetPort: 80
+    -
+      name: https
+      port: 443
