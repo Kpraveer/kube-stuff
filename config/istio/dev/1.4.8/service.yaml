@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: istio-external-ingressgateway
+  namespace: istio-system
+  annotations:
+    alb.ingress.kubernetes.io/tags: "evtech:owner=platform-infrastructure,evtech:env=dev,Description=Istio-External-Ingress-LB"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-2:xxxxxxxxxxxxx:certificate/xxxxxxxxxxxxxxxxxxxxx"
+    external-dns.alpha.kubernetes.io/hostname: "*.xxx.xxxxxxxxx.xxxxxxxxxxxx.com"
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "180"
