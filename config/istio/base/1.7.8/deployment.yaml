@@ -7668,7 +7668,7 @@ data:
         },
         "enableHelmTest": false,
         "enabled": true,
-        "hub": "176992832580.dkr.ecr.us-east-2.amazonaws.com/istio",
+        "hub": "xxxxxxxxxxx.dkr.ecr.us-east-2.amazonaws.com/istio",
         "imagePullPolicy": "",
         "imagePullSecrets": [],
         "istioNamespace": "istio-system",
@@ -8425,7 +8425,7 @@ spec:
           value: sni-dnat
         - name: ISTIO_META_CLUSTER_ID
           value: Kubernetes
-        image: 176992832580.dkr.ecr.us-east-2.amazonaws.com/istio/proxyv2:1.7.8
+        image: xxxxxxxxxxxx.dkr.ecr.us-east-2.amazonaws.com/istio/proxyv2:1.7.8
         name: istio-proxy
         ports:
         - containerPort: 15021
@@ -8606,7 +8606,7 @@ spec:
           value: Kubernetes
         - name: CENTRAL_ISTIOD
           value: "false"
-        image: 176992832580.dkr.ecr.us-east-2.amazonaws.com/istio/pilot:1.7.8
+        image: xxxxxxxxxxxx.dkr.ecr.us-east-2.amazonaws.com/istio/pilot:1.7.8
         name: discovery
         ports:
         - containerPort: 8080
