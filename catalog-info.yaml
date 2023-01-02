@@ -2,7 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: kube-stuff
-  title: Sample Service # optional, human readable component name
+  title: Sample Service 
   description: My first Backstage catalog item.
   annotations:
     github.com/project-slug: github.com/kube-stuff
